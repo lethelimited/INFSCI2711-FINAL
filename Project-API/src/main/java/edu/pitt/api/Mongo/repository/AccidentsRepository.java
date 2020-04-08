@@ -11,7 +11,13 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-public interface AccidentsRepository extends MongoRepository<Accidents, String>
+public interface AccidentsRepository extends MongoRepository<Accidents, String>, CustomRepository
 {
-    Accidents findBy_id(String id);
+    // test for connection
+    Accidents findByid(String id);
+
+    //search accidents by numbersByState
+
+
+
 }
