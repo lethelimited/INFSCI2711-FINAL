@@ -8,9 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Accidents
 {
     @Id
-    public ObjectId _id;
+//    public ObjectId _id;
     public String id;
-    public String tmc;
+    public String source;
     public String severity;
     public String startTime;
     public String endTime;
@@ -34,17 +34,17 @@ public class Accidents
 
     //Constructor
     public Accidents(){}
-    public Accidents(ObjectId _id, String id,String tmc,String severity, String startTime,
+    public Accidents(String id, String source,String severity, String startTime,
                      String endTime, String lat, String lng,
                      String distance, String description, String number,String street,
                      String side, String city, String county, String state, String zipcode,
                      String country, String temperature, String humidity,
                      String visibility, String wind_speed,String weather_condition)
     {
-        this._id = _id;
+//        this._id = _id;
         this.id = id;
         this.severity = severity;
-        this.tmc = tmc;
+        this.source = source;
         this.startTime = startTime;
         this.endTime = endTime;
         this.lat = lat;
@@ -65,8 +65,8 @@ public class Accidents
         this.wind_speed = wind_speed;
         this.weather_condition = weather_condition;
     }
-    public String get_id() { return _id.toHexString(); }
-    public void set_id(ObjectId _id) { this._id = _id; }
+//    public String get_id() { return _id.toHexString(); }
+//    public void set_id(ObjectId _id) { this._id = _id; }
     public String getId() {
         return id;
     }
@@ -75,12 +75,12 @@ public class Accidents
         this.id = id;
     }
 
-    public String getTmc() {
-        return tmc;
+    public String getSource() {
+        return source;
     }
 
-    public void setTmc(String tmc) {
-        this.tmc = tmc;
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String getSeverity() {
