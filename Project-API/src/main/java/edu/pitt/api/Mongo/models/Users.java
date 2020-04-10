@@ -2,28 +2,45 @@ package edu.pitt.api.Mongo.models;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Arrays;
+import java.util.List;
+
+
 @Document("user")
 public class Users {
 
     @Id
-    public ObjectId _id;
+    private ObjectId _id;
+    @Field
+    private boolean isAdmin;
+    @Field
+    private boolean isAnonymous=false;
+    @Field
+    private String usrname;
+    @Field
+    private String pwd;
+    @Field
+    private String email;
+    @Field
+    private String city;
+    @Field
+    private String state;
+    @Field
+    private String phone;
+    @Field
+    private String[] report;
 
-    public String usrname;
-    public String type; // user or admin
-    public String pwd;
-    public String city;
-    public String state;
-    public String email;
-    public String phone;
-    public String[] report;
+
 
     //Constructors
     public Users(){}
-    public Users(ObjectId _id, String usrname, String type, String pwd, String city, String state, String email, String phone, String[] report)
+    public Users(ObjectId _id, String usrname, boolean isAdmin, String pwd, String city, String state, String email, String phone, String[] report)
     {
         this._id = _id;
         this.usrname = usrname;
-        this.type = type;
+        this.isAdmin = isAdmin;
         this.pwd = pwd;
         this.city = city;
         this.state = state;
@@ -36,11 +53,11 @@ public class Users {
     public String get_id() { return _id.toHexString(); }
     public void set_id(ObjectId _id) { this._id = _id; }
 
-    public String getName() { return usrname; }
-    public void setName(String usrname) { this.usrname = usrname; }
+    public String getUsrname() { return usrname; }
+    public void setUsrname(String usrname) { this.usrname = usrname; }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public boolean isAdmin() { return isAdmin; }
+    public void setAdmin(boolean isAdmin) { this.isAdmin = isAdmin; }
 
     public String getPwd() { return pwd; }
     public void setPwd(String pwd) { this.pwd = pwd; }
@@ -59,5 +76,18 @@ public class Users {
 
     public String[] getReport() { return report; }
     public void setReport(String[] report) { this.report = report; }
+
+    public boolean isAnonymous(){return isAnonymous;}
+    public void setAnonymous(boolean isAnonymous) {
+        this.isAnonymous = isAnonymous;
+    }
+
+    public List<Role> getRoles() {
+        if (isAdmin) {
+            return Arrays.asList(Role.ROLE_ADMIN);
+        } else {
+            return Arrays.asList(Role.ROLE_CLIENT);
+        }
+    }
 
 }
