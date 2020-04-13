@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Accidents
 {
     @Id
-//    public ObjectId _id;
+    public ObjectId _id;
     public String id;
     public String source;
     public String severity;
@@ -34,14 +34,14 @@ public class Accidents
 
     //Constructor
     public Accidents(){}
-    public Accidents(String id, String source,String severity, String startTime,
+    public Accidents(ObjectId _id,String id, String source,String severity, String startTime,
                      String endTime, String lat, String lng,
                      String distance, String description, String number,String street,
                      String side, String city, String county, String state, String zipcode,
                      String country, String temperature, String humidity,
                      String visibility, String wind_speed,String weather_condition)
     {
-//        this._id = _id;
+        this._id = _id;
         this.id = id;
         this.severity = severity;
         this.source = source;

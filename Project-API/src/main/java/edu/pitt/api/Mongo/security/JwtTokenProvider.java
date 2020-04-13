@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
@@ -30,7 +31,7 @@ public class JwtTokenProvider {
     private MyUserDetails myUserDetails;
 
     @Value("${security.jwt.token.expire-length:3600000}")
-    private long validityInMilliseconds = 3600000*12; // 1h
+    private long validityInMilliseconds = 3600000 * 12; // 1h
 
 
     @PostConstruct
@@ -41,7 +42,7 @@ public class JwtTokenProvider {
     public String createToken(Users user) {
 
         Claims claims = Jwts.claims().setSubject(user.getUsrname());
-        claims.put("auth",user.getRoles().stream().map(s -> new SimpleGrantedAuthority(s.getAuthority()))
+        claims.put("auth", user.getRoles().stream().map(s -> new SimpleGrantedAuthority(s.getAuthority()))
                 .filter(Objects::nonNull).collect(Collectors.toList()));
         Date now = new Date();
 
@@ -49,7 +50,8 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + validityInMilliseconds))
+                .setExpiration(Date.from(ZonedDateTime.now().plusHours(12).toInstant()))
+//                .setExpiration(new Date(now.getTime() + validityInMilliseconds))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }

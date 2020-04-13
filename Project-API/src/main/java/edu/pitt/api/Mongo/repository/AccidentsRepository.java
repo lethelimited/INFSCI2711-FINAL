@@ -21,6 +21,4 @@ public interface AccidentsRepository extends MongoRepository<Accidents, String>,
     List<Accidents> findAllBySource(String username);
     //search accidents by numbersByState
 
-
-
 }
