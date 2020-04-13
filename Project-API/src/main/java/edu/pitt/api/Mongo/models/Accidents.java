@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Accidents
 {
     @Id
-//    public ObjectId _id;
+    public ObjectId _id;
     public String id;
     public String source;
     public String severity;
@@ -67,10 +67,10 @@ public class Accidents
     }
 //    public String get_id() { return _id.toHexString(); }
 //    public void set_id(ObjectId _id) { this._id = _id; }
+
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -219,11 +219,11 @@ public class Accidents
         this.humidity = humidity;
     }
 
-    public String getVisibity() {
+    public String getVisibility() {
         return visibility;
     }
 
-    public void setVisibity(String visibity) {
+    public void setVisibility(String visibity) {
         this.visibility = visibity;
     }
 

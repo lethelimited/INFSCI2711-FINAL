@@ -28,4 +28,6 @@ public interface UsersRepository extends MongoRepository<Users,String > {
     Users findUsersByUsrnameIsAndPwdIs(String usrname, String pwd);
 
 
+
+
 }
