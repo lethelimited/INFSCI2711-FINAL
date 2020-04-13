@@ -9,6 +9,7 @@ public interface CustomRepository
     List<Custom.CountVis>getNumbersByVisibility();
     List<Custom.CountHumid>getNumbersByHumidity();
     List<Custom.CountWeather>getNumbersByWeatherCondition();
+    List<Accidents>getRecent100Reports();
 
 
 }

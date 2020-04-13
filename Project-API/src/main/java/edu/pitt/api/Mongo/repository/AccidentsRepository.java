@@ -22,5 +22,6 @@ public interface AccidentsRepository extends MongoRepository<Accidents, String>,
     //search accidents by numbersByState
 
 
+    List<Accidents>getRecent100Reports();
 
 }

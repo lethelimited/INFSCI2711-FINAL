@@ -34,7 +34,10 @@ public class UsersController {
         if (u != null) {
             return ResponseEntity.badRequest().body("username already exists");
 //            throw new RuntimeException("username already exists");
-        } else {
+        }else if(user.getPwd().length()<4||user.getUsrname().length()<4){
+            return ResponseEntity.badRequest().body("wrong Users format");
+        }
+        else {
             String token = jwtTokenProvider.createToken(user);
 
             HashMap<String, Object> result = new HashMap<>();
@@ -96,27 +99,8 @@ public class UsersController {
     /*update new info for user*/
     @PutMapping(value = "/updateAllInfo/{username}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-    public Users updateAllInfo(@PathVariable String username, @RequestBody Users user) {
-        Users u = userRepo.findUsersByUsrnameIs(username);
-        if (u == null) {
-            throw new RuntimeException("username doesn't exist");
-        } else {
-
-            //check email eligibility
-            String newEmail = user.getEmail();
-            if (!u.getEmail().equalsIgnoreCase(newEmail)) {
-                if (userRepo.findUsersByEmailIs(newEmail) != null) {
-                    throw new RuntimeException("email already exist");
-                } else {
-                    u.setEmail(newEmail);
-                }
-            }
-            u.setCity(user.getCity());
-            u.setState(user.getState());
-            u.setPhone(user.getPhone());
-            return userRepo.save(u);
-
-        }
+    public Object updateAllInfo(@PathVariable String username, @RequestBody Users user) {
+        return updateUser(username, user, userRepo);
     }
 
     /*Update report settings*/
@@ -183,6 +167,36 @@ public class UsersController {
     @GetMapping(value = "/One/{id}")
     public List<Users> getOneUser(@PathVariable String id) {
         return userRepo.findByThePersonsid(id);
+    }
+
+    static Object updateUser(@PathVariable String username, @RequestBody Users user, UsersRepository userRepository) {
+        Users u = userRepository.findUsersByUsrnameIs(username);
+        if (u == null) {
+            return ResponseEntity.badRequest().body("username doesn't exist");
+        } else {
+
+            //check email eligibility
+            String newEmail = user.getEmail();
+            if(newEmail.length()<4){
+                return ResponseEntity.badRequest().body("No valid email found in requestBody");
+            }
+            try{
+            if (!u.getEmail().equalsIgnoreCase(newEmail)) {
+                if (userRepository.findUsersByEmailIs(newEmail) != null) {
+                    return ResponseEntity.badRequest().body("email already exist");
+                } else {
+                    u.setEmail(newEmail);
+                }
+            }
+            }catch(Exception e){
+                return ResponseEntity.badRequest().body("users email doesn't exist");
+            }
+            u.setCity(user.getCity());
+            u.setState(user.getState());
+            u.setPhone(user.getPhone());
+            return userRepository.save(u);
+
+        }
     }
 
 }

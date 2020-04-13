@@ -6,13 +6,11 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
-import org.omg.CORBA.CustomMarshal;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import java.util.List;
@@ -97,5 +95,12 @@ public class CustomRepositoryImpl implements CustomRepository
         return mongoTemplate.aggregate(agg,Accidents.class, Custom.CountWeather.class).getMappedResults();
     }
 
+    @Override
+    public List<Accidents>getRecent100Reports(){
+        Query loadTop100 = new Query();
+        loadTop100.limit(100);
+        loadTop100.with(Sort.by(Sort.Direction.DESC, "startTime"));
+        return mongoTemplate.find(loadTop100, Accidents.class);
+    }
 
 }
