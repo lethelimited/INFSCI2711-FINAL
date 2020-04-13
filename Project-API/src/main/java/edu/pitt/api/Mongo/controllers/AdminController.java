@@ -4,17 +4,22 @@ import edu.pitt.api.Mongo.config.AppKeys;
 import edu.pitt.api.Mongo.models.Accidents;
 import edu.pitt.api.Mongo.models.Users;
 import edu.pitt.api.Mongo.repository.AccidentsRepository;
+import edu.pitt.api.Mongo.repository.AdminRepository;
 import edu.pitt.api.Mongo.repository.UsersRepository;
 import edu.pitt.api.Mongo.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+
+
 
 import edu.pitt.api.Mongo.repository.AdminRepository;
 
@@ -33,6 +38,50 @@ public class AdminController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    /*delete reports by reports' Id*/
+    @DeleteMapping("/report/{reportId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Object deleteAccidentsById(@PathVariable String reportId) {
+        try {
+            Accidents acc = accidentRepo.findByid(reportId);
+            if (acc == null) {
+                return ResponseEntity.badRequest().body("query report null");
+            } else {
+                accidentRepo.deleteById(reportId);
+            }
+            return acc;
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("No report is found");
+        }
+    }
+
+    /*delete users by username*/
+    @DeleteMapping("/user/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Object deleteUsersbyUsername(@PathVariable String username) {
+        try {
+            boolean exists = 
+              userRepo.existsUsersByUsrname(username);
+            if (exists) {
+                Users u=userRepo.findUsersByUsrnameIs(username);
+               userRepo.delete(u);
+               return u;
+
+            }else{
+                return ResponseEntity.badRequest().body("user is not found");
+            }
+        } catch (Exception er) {
+            throw er;
+        }
+    }
+
+    @PutMapping("updateUser/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Object updateUser(@PathVariable String username, @RequestBody Users user) {
+        return UsersController.updateUser(username, user, userRepo);
+    }
+
+
     static Object getObject(Optional<Users> admin, JwtTokenProvider jwtTokenProvider) {
         try {
             String token = jwtTokenProvider.createToken(admin.get());
@@ -45,6 +94,7 @@ public class AdminController {
             throw new RuntimeException("Invalid username/password supplied");
         }
     }
+
 
     // admin login
     @PostMapping(value = "/login")
